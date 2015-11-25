@@ -94,7 +94,7 @@ class CStruct(ctypes.Structure):
             if any(v(val,self,mem) for v in validation):
                 #raise DoesNotValidateException("DoesNotValidate: %s %s %s"%(repr(name),repr(typ),repr(val)))
                 return False
-            #print name, repr(val)
+            print name, repr(val)
         return True
             
             
@@ -227,17 +227,17 @@ class ssl_session_st(CStruct):
                 ("sess_cert",ctypes.c_void_p),
                 ("peer",ctypes.c_void_p),
                 ("verify_result",ctypes.c_long),
-                ("references",ctypes.c_int, [Validate.not_null]),
+                ("references",ctypes.c_int), #[Validate.not_null]),
                 ("timeout",ctypes.c_long),
                 ("time",ctypes.c_long),
                 ("compress_meth",ctypes.c_int),
                 ("cipher",ctypes.c_void_p),
                 ("cipher_id",ctypes.c_ulong),
                 ("ciphers",ctypes.c_void_p),
-                ("ex_data_sk",ctypes.c_void_p),
-                ("ex_data_dummy",ctypes.c_int),
-                ("prev",ctypes.c_void_p),
-                ("next",ctypes.c_void_p),
+                #("ex_data_sk",ctypes.c_void_p),
+                #("ex_data_dummy",ctypes.c_int),
+                #("prev",ctypes.c_void_p),
+                #("next",ctypes.c_void_p),
                 ]
 
 class bignum_st(CStruct):
@@ -741,8 +741,8 @@ if __name__=="__main__":
     if not len(sys.argv)>1:
         print "usage: <pid>"
         sys.exit(1)
+        
     pid = sys.argv[1]
-    
     pmem = LinuxProcMemory(pid)
     
     for region in (r for r in pmem.regions if all(p in r.permissions for p in "rw") and not "deleted" in r.name):    #only check read/writable pages
