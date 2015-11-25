@@ -15,10 +15,13 @@ This is just a python PoC. There is lots of space for improvement :)
 
 Extract master_key, session_id from openssl s_client TLS1.0 session with ECDHE-RSA-AES256-SHA.
 
+Start the server:
 
 	#> openssl s_server &
 	[1] 16462
 	
+initiate s_client connection for any ECDH cipher:
+
 	#> # openssl s_client -connect localhost:4433 -tls1 -cipher ECDH
 	CONNECTED(00000003)
 	-----BEGIN SSL SESSION PARAMETERS-----
@@ -86,9 +89,8 @@ Extract master_key, session_id from openssl s_client TLS1.0 session with ECDHE-R
 	    Verify return code: 21 (unable to verify the first certificate)
 	---
 	
+scrape the memory for the ssl session struct:
 
-	
-	
 	#> for p in $(pgrep openssl); do python memscrape.py $p; done 
 	<LinuxMemRegion size=880640 start=164278272 end=165158912 permissions=rw-p name=[heap]
 	09cab000-09d82000 rw-p 00000000 00:00 0          [heap]
@@ -138,5 +140,5 @@ Extract master_key, session_id from openssl s_client TLS1.0 session with ECDHE-R
 	}
 	--> valid struct_ssl_session struct!
 
-
+master_key matches output of s_client, version matches 0x0301==769==TLS_1_0.
 		
